@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Chemistry — Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #1a0f0a;
+  --surface:  #231510;
+  --surface2: #2e1c14;
+  --border:   #4a2e20;
+  --border2:  #5c3a28;
+  --sun:      #f97316;
+  --dusk:     #fb923c;
+  --amber:    #fbbf24;
+  --rose:     #f43f5e;
+  --sky:      #7dd3fc;
+  --text:     #fdf4ed;
+  --text2:    #c4956a;
+  --text3:    #7a5540;
+  --green:    #86efac;
+  --red:      #fca5a5;
+  --serif:    'Cormorant Garamond', Georgia, serif;
+  --sans:     'Outfit', sans-serif;
+  --r:        10px;
+  --r-lg:     16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-weight:300;
+  min-height:100vh;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;top:0;left:0;right:0;height:320px;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(249,115,22,0.18) 0%, transparent 70%);
+  pointer-events:none;z-index:0;
+}
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(26,15,10,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:52px;
+}
+.nav-logo{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--dusk);letter-spacing:0.02em;}
+.nav-logo span{color:var(--text3);font-weight:400;font-size:13px;margin-left:8px;font-family:var(--sans);}
+.nav-tabs{display:flex;gap:2px;}
+.nav-tab{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:400;color:var(--text3);padding:5px 12px;border-radius:7px;transition:all 0.18s;}
+.nav-tab:hover{color:var(--text2);}
+.nav-tab.active{color:var(--dusk);background:rgba(251,146,60,0.1);}
+.section{display:none;max-width:680px;margin:0 auto;padding:2.5rem 2rem;position:relative;z-index:1;}
+.section.active{display:block;animation:up 0.28s ease;}
+@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hero{padding:4rem 0 2rem;text-align:center;}
+.hero h1{font-family:var(--serif);font-size:clamp(2.4rem,6vw,4rem);font-weight:500;color:var(--text);line-height:1.1;margin-bottom:0.75rem;}
+.hero h1 em{color:var(--sun);font-style:italic;}
+.hero p{color:var(--text2);font-size:15px;max-width:400px;margin:0 auto 2.5rem;font-weight:300;}
+.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;}
+.hero-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem 1rem 1rem;cursor:pointer;text-align:left;transition:all 0.2s;}
+.hero-tile:hover{border-color:var(--border2);transform:translateY(-2px);background:var(--surface2);}
+.hero-tile-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.hero-tile-name{font-family:var(--serif);font-size:18px;font-weight:500;color:var(--text);}
+.sec-head{margin-bottom:2rem;}
+.sec-head h2{font-family:var(--serif);font-size:2rem;font-weight:500;color:var(--text);margin-bottom:4px;}
+.sec-head p{color:var(--text2);font-size:14px;}
+.stats{display:flex;gap:8px;margin-bottom:1.25rem;}
+.stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:0.65rem 0.75rem;text-align:center;}
+.stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px;}
+.stat-val{font-size:20px;font-weight:500;color:var(--text);}
+.pips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.25rem;min-height:12px;}
+.pip{width:9px;height:9px;border-radius:50%;background:var(--border2);}
+.pip.hit{background:var(--green);}
+.pip.miss{background:var(--red);}
+.modes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;}
+.m-tab{padding:5px 13px;border-radius:7px;border:1px solid var(--border);background:none;color:var(--text3);font-size:12px;font-family:var(--sans);font-weight:400;cursor:pointer;transition:all 0.15s;}
+.m-tab:hover{color:var(--text2);border-color:var(--border2);}
+.m-tab.active{background:rgba(249,115,22,0.12);border-color:var(--sun);color:var(--dusk);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.75rem;margin-bottom:1rem;}
+.p-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;}
+.p-text{font-family:var(--serif);font-size:2rem;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.2;}
+.p-hint{font-size:13px;color:var(--text3);margin-bottom:1.5rem;}
+.inp-row{display:flex;gap:8px;margin-bottom:1rem;}
+.inp-row input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:0 1rem;height:44px;font-family:var(--sans);font-size:15px;color:var(--text);outline:none;transition:border-color 0.18s;}
+.inp-row input:focus{border-color:var(--sun);}
+.inp-row input::placeholder{color:var(--text3);}
+.btn{padding:0 1.25rem;height:44px;background:var(--sun);border:none;border-radius:var(--r);color:#1a0f0a;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.btn:hover{background:var(--dusk);transform:translateY(-1px);}
+.btn-ghost{background:var(--surface2);border:1px solid var(--border);color:var(--text2);}
+.btn-ghost:hover{background:var(--border);transform:none;}
+.btn-full{width:100%;display:flex;align-items:center;justify-content:center;}
+.reveal{border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1rem;display:none;}
+.reveal.show{display:block;animation:up 0.2s ease;}
+.reveal.correct{background:rgba(134,239,172,0.08);border:1px solid rgba(134,239,172,0.25);}
+.reveal.wrong{background:rgba(252,165,165,0.08);border:1px solid rgba(252,165,165,0.2);}
+.r-lbl{font-size:12px;font-weight:500;margin-bottom:4px;}
+.reveal.correct .r-lbl{color:var(--green);}
+.reveal.wrong .r-lbl{color:var(--red);}
+.r-ans{font-family:var(--serif);font-size:1.35rem;}
+.reveal.correct .r-ans{color:var(--green);}
+.reveal.wrong .r-ans{color:var(--red);}
+.r-correct{font-size:13px;color:var(--text2);margin-top:4px;}
+.self-grade{display:none;gap:8px;margin-bottom:1rem;}
+.self-grade.show{display:flex;}
+.g-btn{flex:1;height:40px;border:none;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--sans);}
+.g-got{background:rgba(134,239,172,0.12);color:var(--green);}
+.g-got:hover{background:rgba(134,239,172,0.2);}
+.g-miss{background:rgba(252,165,165,0.12);color:var(--red);}
+.g-miss:hover{background:rgba(252,165,165,0.2);}
+.next-btn{display:none;}
+.next-btn.show{display:flex;}
+.end{text-align:center;padding:2rem 0;}
+.end-big{font-family:var(--serif);font-size:5rem;font-weight:500;color:var(--sun);line-height:1;margin:0.5rem 0;}
+.end-sub{color:var(--text2);font-size:14px;margin-bottom:1.75rem;}
+.end-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.end-btn{padding:0.55rem 1.1rem;border:1px solid var(--border);border-radius:var(--r);background:none;color:var(--text2);font-size:13px;font-family:var(--sans);cursor:pointer;}
+.end-btn:hover{background:var(--surface2);color:var(--text);}
+/* ACIDS */
+.theory-tabs{display:flex;gap:6px;margin-bottom:1.5rem;flex-wrap:wrap;}
+.t-tab{padding:6px 14px;border-radius:7px;border:1px solid var(--border);background:none;color:var(--text3);font-size:12px;font-family:var(--sans);cursor:pointer;transition:all 0.15s;}
+.t-tab:hover{color:var(--text2);}
+.t-tab.active{background:rgba(249,115,22,0.12);border-color:var(--sun);color:var(--dusk);}
+.theory-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;margin-bottom:1rem;}
+.theory-title{font-family:var(--serif);font-size:1.5rem;font-weight:500;color:var(--dusk);margin-bottom:0.25rem;}
+.theory-sub{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;}
+.theory-body{font-size:14px;color:var(--text2);line-height:1.85;}
+.theory-body strong{color:var(--text);font-weight:500;}
+.theory-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem;}
+.theory-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:1rem;}
+.theory-box-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-bottom:6px;}
+.theory-box-content{font-size:13px;color:var(--text2);line-height:1.7;}
+.theory-box-content em{color:var(--amber);font-style:normal;font-weight:500;}
+.fc-tag{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--sun);border:1px solid rgba(249,115,22,0.3);padding:2px 8px;border-radius:99px;margin-bottom:10px;background:rgba(249,115,22,0.06);}
+.nom-grid{display:grid;gap:8px;}
+.nom-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.nom-name{font-family:var(--serif);font-size:1.05rem;color:var(--text);}
+.nom-formula{font-size:13px;color:var(--text3);margin-top:2px;}
+.nom-type{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;padding:3px 10px;border-radius:99px;white-space:nowrap;}
+.nom-acid{background:rgba(244,63,94,0.12);color:var(--rose);}
+.nom-base{background:rgba(125,211,252,0.12);color:var(--sky);}
+.nom-ampho{background:rgba(251,191,36,0.12);color:var(--amber);}
+/* PERIODIC */
+.pt-grid{display:grid;grid-template-columns:repeat(18,1fr);gap:2px;overflow-x:auto;margin-bottom:1.5rem;}
+.pt-cell{aspect-ratio:1;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;min-width:26px;background:var(--surface2);border:1px solid transparent;}
+.pt-cell:hover{border-color:var(--sun);z-index:2;transform:scale(1.12);}
+.pt-cell.correct-hl{background:rgba(134,239,172,0.2);border-color:var(--green);}
+.pt-cell.wrong-hl{background:rgba(252,165,165,0.2);border-color:var(--red);}
+.pt-cell .sym{font-size:7px;font-weight:600;color:var(--text);}
+.pt-cell .anum{font-size:5px;color:var(--text3);}
+.pt-cell.empty{background:none;border:none;cursor:default;}
+.pt-cell.alkali{background:rgba(244,63,94,0.12);}
+.pt-cell.alkaline{background:rgba(251,191,36,0.1);}
+.pt-cell.transition{background:rgba(249,115,22,0.1);}
+.pt-cell.metalloid{background:rgba(125,211,252,0.1);}
+.pt-cell.nonmetal{background:rgba(134,239,172,0.1);}
+.pt-cell.halogen{background:rgba(251,191,36,0.12);}
+.pt-cell.noble{background:rgba(251,146,60,0.08);}
+.pt-prompt{text-align:center;margin-bottom:1.5rem;}
+.pt-prompt .big{font-family:var(--serif);font-size:3rem;font-weight:500;color:var(--sun);}
+.pt-prompt .sub{font-size:13px;color:var(--text3);margin-top:4px;}
+/* EQUATIONS */
+.eq-display{font-size:1.25rem;text-align:center;padding:1.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1.25rem;line-height:2.2;color:var(--text);}
+.eq-blank{display:inline-block;width:34px;height:30px;line-height:30px;text-align:center;background:var(--surface);border:1.5px solid var(--sun);border-radius:5px;margin:0 3px;cursor:pointer;color:var(--sun);font-weight:600;transition:all 0.15s;vertical-align:middle;font-size:14px;}
+.eq-blank.filled{color:var(--text);border-color:var(--border2);background:var(--surface2);}
+.eq-blank.selected-blank{border-color:var(--rose);color:var(--rose);}
+.eq-blank.correct-eq{border-color:var(--green);color:var(--green);background:rgba(134,239,172,0.08);}
+.eq-blank.wrong-eq{border-color:var(--red);color:var(--red);background:rgba(252,165,165,0.08);}
+.eq-num-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:1rem;}
+.eq-num{width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:15px;font-weight:500;cursor:pointer;transition:all 0.15s;}
+.eq-num:hover{background:rgba(249,115,22,0.15);border-color:var(--sun);color:var(--dusk);}
+.eq-btns-row{display:flex;gap:8px;}
+/* REFERENCE */
+.ref-table{width:100%;border-collapse:collapse;font-size:14px;}
+.ref-table th{text-align:left;padding:10px 14px;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);border-bottom:1px solid var(--border);font-weight:500;}
+.ref-table td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--text2);}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:var(--surface2);}
+.ref-table td:first-child{color:var(--text);}
+.ref-table td.formula{font-family:'Courier New',monospace;color:var(--dusk);}
+.ch-badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;font-family:'Courier New',monospace;}
+.ch-pos{background:rgba(244,63,94,0.12);color:var(--rose);}
+.ch-1{background:rgba(249,115,22,0.12);color:var(--sun);}
+.ch-2{background:rgba(251,191,36,0.12);color:var(--amber);}
+.ch-3{background:rgba(125,211,252,0.12);color:var(--sky);}
+footer{text-align:center;padding:2rem;color:var(--text3);font-size:12px;border-top:1px solid var(--border);margin-top:4rem;position:relative;z-index:1;}
+@media(max-width:600px){
+  nav{padding:0 1rem;}
+  .nav-logo span{display:none;}
+  .section{padding:1.5rem 1rem;}
+  .theory-row{grid-template-columns:1fr;}
+  .pt-grid{transform:scale(0.82);transform-origin:top left;margin-bottom:-3rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Chem <span>AP Review</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="show('home')">Home</button>
+    <button class="nav-tab" onclick="show('ions')">Ions</button>
+    <button class="nav-tab" onclick="show('acids')">Acids & Bases</button>
+    <button class="nav-tab" onclick="show('periodic')">Periodic</button>
+    <button class="nav-tab" onclick="show('equations')">Equations</button>
+    <button class="nav-tab" onclick="show('reference')">Reference</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="sec-home" class="section active">
+  <div class="hero">
+    <h1>AP Chemistry.<br><em>Practice.</em></h1>
+    <p>Active recall across polyatomic ions, acid-base theory, periodic table, and equation balancing.</p>
+    <div class="hero-grid">
+      <div class="hero-tile" onclick="show('ions')">
+        <div class="hero-tile-label">01 — Memorization</div>
+        <div class="hero-tile-name">Polyatomic Ions</div>
+      </div>
+      <div class="hero-tile" onclick="show('acids')">
+        <div class="hero-tile-label">02 — Theory</div>
+        <div class="hero-tile-name">Acids & Bases</div>
+      </div>
+      <div class="hero-tile" onclick="show('periodic')">
+        <div class="hero-tile-label">03 — Elements</div>
+        <div class="hero-tile-name">Periodic Table</div>
+      </div>
+      <div class="hero-tile" onclick="show('equations')">
+        <div class="hero-tile-label">04 — Balancing</div>
+        <div class="hero-tile-name">Equations</div>
+      </div>
+      <div class="hero-tile" onclick="show('reference')">
+        <div class="hero-tile-label">05 — Lookup</div>
+        <div class="hero-tile-name">Reference</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IONS -->
+<div id="sec-ions" class="section">
+  <div class="sec-head">
+    <h2>Polyatomic Ions</h2>
+    <p>Type from memory — no multiple choice.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-lbl">Score</div><div class="stat-val" id="i-score">0</div></div>
+    <div class="stat"><div class="stat-lbl">Correct</div><div class="stat-val" id="i-ct">0</div></div>
+    <div class="stat"><div class="stat-lbl">Card</div><div class="stat-val" id="i-qn">1/12</div></div>
+  </div>
+  <div class="pips" id="i-pips"></div>
+  <div class="modes">
+    <button class="m-tab active" onclick="iSetMode('formula',this)">Name → Formula</button>
+    <button class="m-tab" onclick="iSetMode('name',this)">Formula → Name</button>
+    <button class="m-tab" onclick="iSetMode('charge',this)">Name → Charge</button>
+    <button class="m-tab" onclick="iSetMode('full',this)">Name → Formula + Charge</button>
+  </div>
+  <div class="card" id="i-card">
+    <div class="p-lbl" id="i-plbl"></div>
+    <div class="p-text" id="i-ptxt"></div>
+    <div class="p-hint" id="i-phint"></div>
+    <div class="inp-row">
+      <input type="text" id="i-inp" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false"/>
+      <button class="btn" onclick="iSubmit()">Check</button>
+    </div>
+    <div class="reveal" id="i-reveal">
+      <div class="r-lbl" id="i-rlbl"></div>
+      <div class="r-ans" id="i-rans"></div>
+      <div class="r-correct" id="i-rcorrect"></div>
+    </div>
+    <div class="self-grade" id="i-sg">
+      <button class="g-btn g-got" onclick="iGrade(true)">✓ Got it</button>
+      <button class="g-btn g-miss" onclick="iGrade(false)">✗ Missed it</button>
+    </div>
+    <button class="btn btn-ghost btn-full next-btn" id="i-next" onclick="iNext()">Next →</button>
+  </div>
+</div>
+
+<!-- ACIDS & BASES -->
+<div id="sec-acids" class="section">
+  <div class="sec-head">
+    <h2>Acids & Bases</h2>
+    <p>Theory, nomenclature, and active recall.</p>
+  </div>
+  <div class="theory-tabs">
+    <button class="t-tab active" onclick="acidsTab('theory',this)">Theory</button>
+    <button class="t-tab" onclick="acidsTab('nomenclature',this)">Nomenclature</button>
+    <button class="t-tab" onclick="acidsTab('quiz',this)">Quiz</button>
+  </div>
+
+  <div id="acids-theory">
+    <div class="theory-card">
+      <div class="theory-sub">Definition 01</div>
+      <div class="theory-title">Arrhenius</div>
+      <div class="theory-body">
+        The most restrictive definition — aqueous solutions only.<br><br>
+        <strong>Acid:</strong> produces H⁺ ions in water.<br>
+        <strong>Base:</strong> produces OH⁻ ions in water.
+      </div>
+      <div class="theory-row">
+        <div class="theory-box">
+          <div class="theory-box-label">Acid example</div>
+          <div class="theory-box-content">HCl → <em>H⁺</em> + Cl⁻<br>Hydrochloric acid</div>
+        </div>
+        <div class="theory-box">
+          <div class="theory-box-label">Base example</div>
+          <div class="theory-box-content">NaOH → Na⁺ + <em>OH⁻</em><br>Sodium hydroxide</div>
+        </div>
+      </div>
+      <div class="theory-body" style="margin-top:1rem;font-size:13px;color:var(--text3);">
+        Limitation: cannot explain why NH₃ acts as a base — it releases no OH⁻.
+      </div>
+    </div>
+
+    <div class="theory-card">
+      <div class="theory-sub">Definition 02</div>
+      <div class="theory-title">Brønsted–Lowry</div>
+      <div class="theory-body">
+        Broader — doesn't require water. Based on <strong>proton (H⁺) transfer</strong>.<br><br>
+        <strong>Acid:</strong> proton donor — gives away H⁺.<br>
+        <strong>Base:</strong> proton acceptor — receives H⁺.
+      </div>
+      <div class="theory-row">
+        <div class="theory-box">
+          <div class="theory-box-label">Proton transfer</div>
+          <div class="theory-box-content">HCl + H₂O → H₃O⁺ + Cl⁻<br>HCl = <em>acid</em>, H₂O = <em>base</em></div>
+        </div>
+        <div class="theory-box">
+          <div class="theory-box-label">Conjugate pairs</div>
+          <div class="theory-box-content">Acid loses H⁺ → conjugate base<br>Base gains H⁺ → conjugate acid<br><em>HCl/Cl⁻ and H₂O/H₃O⁺</em></div>
+        </div>
+      </div>
+      <div class="theory-body" style="margin-top:1rem;font-size:13px;color:var(--text3);">
+        Explains NH₃ as a base (accepts H⁺ to form NH₄⁺). Water is amphoteric — it can be both acid and base.
+      </div>
+    </div>
+
+    <div class="theory-card">
+      <div class="theory-sub">Definition 03</div>
+      <div class="theory-title">Lewis</div>
+      <div class="theory-body">
+        The broadest definition — no protons required. Based on <strong>electron pair</strong> transfer.<br><br>
+        <strong>Acid:</strong> electron pair acceptor — has an empty orbital.<br>
+        <strong>Base:</strong> electron pair donor — has a lone pair.
+      </div>
+      <div class="theory-row">
+        <div class="theory-box">
+          <div class="theory-box-label">Lewis acid accepts e⁻ pair</div>
+          <div class="theory-box-content">BF₃ + NH₃ → BF₃NH₃<br>BF₃ = <em>Lewis acid</em> (empty p orbital)</div>
+        </div>
+        <div class="theory-box">
+          <div class="theory-box-label">Lewis base donates e⁻ pair</div>
+          <div class="theory-box-content">NH₃ = <em>Lewis base</em><br>Lone pair on N donated to BF₃<br>No H⁺ transfer at all</div>
+        </div>
+      </div>
+      <div class="theory-body" style="margin-top:1rem;font-size:13px;color:var(--text3);">
+        Every Brønsted–Lowry acid is also a Lewis acid, but not vice versa.
+      </div>
+    </div>
+
+    <div class="theory-card" style="border-color:rgba(249,115,22,0.3);">
+      <div class="theory-sub">Summary</div>
+      <div class="theory-title">Hierarchy</div>
+      <div class="theory-body">
+        <strong>Lewis ⊃ Brønsted–Lowry ⊃ Arrhenius</strong><br><br>
+        Arrhenius is most restrictive (aqueous only, H⁺/OH⁻). Brønsted–Lowry extends to any proton transfer. Lewis covers any electron pair transfer — no protons required at all.
+      </div>
+    </div>
+  </div>
+
+  <div id="acids-nomenclature" style="display:none;">
+    <div class="theory-card" style="margin-bottom:1rem;">
+      <div class="theory-sub">Naming rules</div>
+      <div class="theory-title">Acid Nomenclature</div>
+      <div class="theory-body">
+        <strong>Binary acids</strong> (H + nonmetal, no oxygen):<br>
+        → hydro___ic acid<br>
+        HCl = hydrochloric acid &nbsp;·&nbsp; HBr = hydrobromic acid<br><br>
+        <strong>Oxyacids</strong> (H + oxyanion):<br>
+        → Ion ending in <strong>-ate</strong> → acid ending in <strong>-ic acid</strong><br>
+        → Ion ending in <strong>-ite</strong> → acid ending in <strong>-ous acid</strong><br>
+        HNO₃ (nitrate → nitric acid) &nbsp;·&nbsp; HNO₂ (nitrite → nitrous acid)<br><br>
+        <strong>Bases:</strong> metal + hydroxide — standard ionic naming.<br>
+        NaOH = sodium hydroxide &nbsp;·&nbsp; Ca(OH)₂ = calcium hydroxide
+      </div>
+    </div>
+    <div class="nom-grid" id="nom-grid"></div>
+  </div>
+
+  <div id="acids-quiz" style="display:none;">
+    <div class="stats">
+      <div class="stat"><div class="stat-lbl">Score</div><div class="stat-val" id="aq-score">0</div></div>
+      <div class="stat"><div class="stat-lbl">Correct</div><div class="stat-val" id="aq-ct">0</div></div>
+      <div class="stat"><div class="stat-lbl">Card</div><div class="stat-val" id="aq-qn">1/10</div></div>
+    </div>
+    <div class="pips" id="aq-pips"></div>
+    <div class="modes">
+      <button class="m-tab active" onclick="aqSetMode('def',this)">Theory definitions</button>
+      <button class="m-tab" onclick="aqSetMode('nom',this)">Acid naming</button>
+      <button class="m-tab" onclick="aqSetMode('id',this)">Identify the theory</button>
+    </div>
+    <div class="card" id="aq-card">
+      <div class="fc-tag" id="aq-tag">Definition</div>
+      <div class="p-lbl" id="aq-plbl"></div>
+      <div class="p-text" id="aq-ptxt" style="font-size:1.35rem;line-height:1.4;"></div>
+      <div class="p-hint" id="aq-phint" style="margin-top:6px;margin-bottom:1.5rem;"></div>
+      <div class="inp-row">
+        <input type="text" id="aq-inp" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false"/>
+        <button class="btn" onclick="aqSubmit()">Check</button>
+      </div>
+      <div class="reveal" id="aq-reveal">
+        <div class="r-lbl" id="aq-rlbl"></div>
+        <div class="r-ans" id="aq-rans"></div>
+        <div class="r-correct" id="aq-rcorrect"></div>
+      </div>
+      <div class="self-grade" id="aq-sg">
+        <button class="g-btn g-got" onclick="aqGrade(true)">✓ Got it</button>
+        <button class="g-btn g-miss" onclick="aqGrade(false)">✗ Missed it</button>
+      </div>
+      <button class="btn btn-ghost btn-full next-btn" id="aq-next" onclick="aqNext()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PERIODIC TABLE -->
+<div id="sec-periodic" class="section">
+  <div class="sec-head"><h2>Periodic Table</h2><p>Click the correct element on the table.</p></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-lbl">Score</div><div class="stat-val" id="pt-score">0</div></div>
+    <div class="stat"><div class="stat-lbl">Correct</div><div class="stat-val" id="pt-ct">0</div></div>
+    <div class="stat"><div class="stat-lbl">Q</div><div class="stat-val" id="pt-qn">1/10</div></div>
+  </div>
+  <div class="modes">
+    <button class="m-tab active" onclick="ptSetMode('symbol',this)">Find by Symbol</button>
+    <button class="m-tab" onclick="ptSetMode('name',this)">Find by Name</button>
+    <button class="m-tab" onclick="ptSetMode('number',this)">Find by Atomic #</button>
+  </div>
+  <div class="card">
+    <div class="pt-prompt"><div class="big" id="pt-big"></div><div class="sub" id="pt-sub"></div></div>
+    <div class="pt-grid" id="pt-grid"></div>
+    <div class="reveal" id="pt-reveal">
+      <div class="r-lbl" id="pt-rlbl"></div>
+      <div class="r-ans" id="pt-rans"></div>
+    </div>
+    <button class="btn btn-ghost btn-full next-btn" id="pt-next" onclick="ptNext()" style="margin-top:1rem;">Next →</button>
+  </div>
+</div>
+
+<!-- EQUATIONS -->
+<div id="sec-equations" class="section">
+  <div class="sec-head"><h2>Balance Equations</h2><p>Select a blank, then pick its coefficient.</p></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-lbl">Score</div><div class="stat-val" id="eq-score">0</div></div>
+    <div class="stat"><div class="stat-lbl">Correct</div><div class="stat-val" id="eq-ct">0</div></div>
+    <div class="stat"><div class="stat-lbl">Q</div><div class="stat-val" id="eq-qn">1/10</div></div>
+  </div>
+  <div class="card" id="eq-card">
+    <div class="eq-display" id="eq-disp"></div>
+    <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;">Select a blank above, then a number</div>
+    <div class="eq-num-btns" id="eq-nums"></div>
+    <div class="reveal" id="eq-reveal">
+      <div class="r-lbl" id="eq-rlbl"></div>
+      <div class="r-ans" id="eq-rans"></div>
+    </div>
+    <div class="eq-btns-row">
+      <button class="btn btn-ghost" style="flex:1;" onclick="eqCheck()">Check</button>
+      <button class="btn btn-ghost" style="flex:1;" onclick="eqSkip()">Skip →</button>
+    </div>
+    <button class="btn btn-ghost btn-full next-btn" id="eq-next" onclick="eqNext()" style="margin-top:8px;">Next →</button>
+  </div>
+</div>
+
+<!-- REFERENCE -->
+<div id="sec-reference" class="section">
+  <div class="sec-head"><h2>Reference</h2><p>AP Chem polyatomic ions — quick lookup.</p></div>
+  <div class="card">
+    <table class="ref-table">
+      <thead><tr><th>Name</th><th>Formula</th><th>Charge</th></tr></thead>
+      <tbody id="ref-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>AP Chemistry Practice — open source, ad-free</footer>
+
+<script>
+const IONS=[
+  {name:"Ammonium",formula:"NH₄",charge:"1+",display:"NH₄⁺"},
+  {name:"Hydroxide",formula:"OH",charge:"1−",display:"OH⁻"},
+  {name:"Nitrate",formula:"NO₃",charge:"1−",display:"NO₃⁻"},
+  {name:"Nitrite",formula:"NO₂",charge:"1−",display:"NO₂⁻"},
+  {name:"Sulfate",formula:"SO₄",charge:"2−",display:"SO₄²⁻"},
+  {name:"Sulfite",formula:"SO₃",charge:"2−",display:"SO₃²⁻"},
+  {name:"Carbonate",formula:"CO₃",charge:"2−",display:"CO₃²⁻"},
+  {name:"Hydrogen carbonate",formula:"HCO₃",charge:"1−",display:"HCO₃⁻"},
+  {name:"Phosphate",formula:"PO₄",charge:"3−",display:"PO₄³⁻"},
+  {name:"Acetate",formula:"C₂H₃O₂",charge:"1−",display:"C₂H₃O₂⁻"},
+  {name:"Permanganate",formula:"MnO₄",charge:"1−",display:"MnO₄⁻"},
+  {name:"Dichromate",formula:"Cr₂O₇",charge:"2−",display:"Cr₂O₇²⁻"},
+];
+
+const AQ={
+  def:[
+    {q:"What does an Arrhenius acid produce in water?",a:"H⁺ ions",hint:"Protons / hydrogen ions",tag:"Arrhenius"},
+    {q:"What does an Arrhenius base produce in water?",a:"OH⁻ ions",hint:"Hydroxide ions",tag:"Arrhenius"},
+    {q:"In Brønsted–Lowry theory, what is an acid?",a:"proton donor",hint:"It gives away H⁺",tag:"Brønsted–Lowry"},
+    {q:"In Brønsted–Lowry theory, what is a base?",a:"proton acceptor",hint:"It receives H⁺",tag:"Brønsted–Lowry"},
+    {q:"In Lewis theory, what is an acid?",a:"electron pair acceptor",hint:"Has an empty orbital",tag:"Lewis"},
+    {q:"In Lewis theory, what is a base?",a:"electron pair donor",hint:"Has a lone pair to share",tag:"Lewis"},
+    {q:"Which theory is the most restrictive (requires aqueous solution)?",a:"Arrhenius",hint:"Only works in water",tag:"Comparison"},
+    {q:"Which theory is the broadest / most inclusive?",a:"Lewis",hint:"No H⁺ transfer required",tag:"Comparison"},
+    {q:"What is a conjugate acid-base pair?",a:"an acid and the base it forms after donating H⁺",hint:"Brønsted–Lowry concept",tag:"Brønsted–Lowry"},
+    {q:"What does 'amphoteric' mean?",a:"can act as both acid and base",hint:"Water is the classic example",tag:"Theory"},
+  ],
+  nom:[
+    {q:"Name: HCl (aq)",a:"hydrochloric acid",hint:"Binary acid: hydro + root + ic",tag:"Binary acid"},
+    {q:"Name: HBr (aq)",a:"hydrobromic acid",hint:"hydro + brom + ic",tag:"Binary acid"},
+    {q:"Name: HI (aq)",a:"hydroiodic acid",hint:"hydro + iod + ic",tag:"Binary acid"},
+    {q:"Name: HNO₃",a:"nitric acid",hint:"nitrate → change -ate to -ic acid",tag:"Oxyacid"},
+    {q:"Name: HNO₂",a:"nitrous acid",hint:"nitrite → change -ite to -ous acid",tag:"Oxyacid"},
+    {q:"Name: H₂SO₄",a:"sulfuric acid",hint:"sulfate → -ate becomes -ic acid",tag:"Oxyacid"},
+    {q:"Name: H₂SO₃",a:"sulfurous acid",hint:"sulfite → -ite becomes -ous acid",tag:"Oxyacid"},
+    {q:"Name: H₃PO₄",a:"phosphoric acid",hint:"phosphate → -ate becomes -ic acid",tag:"Oxyacid"},
+    {q:"Name: HC₂H₃O₂",a:"acetic acid",hint:"acetate-based oxyacid",tag:"Oxyacid"},
+    {q:"Name: NaOH",a:"sodium hydroxide",hint:"ionic: metal + hydroxide",tag:"Base"},
+    {q:"Name: Ca(OH)₂",a:"calcium hydroxide",hint:"calcium + hydroxide",tag:"Base"},
+    {q:"Name: NH₃ (aq)",a:"aqueous ammonia",hint:"molecular base, not a metal hydroxide",tag:"Base"},
+  ],
+  id:[
+    {q:"NH₃ accepts H⁺ to form NH₄⁺. Which theory explains this?",a:"Brønsted–Lowry",hint:"Arrhenius cannot — NH₃ has no OH⁻",tag:"Identify"},
+    {q:"BF₃ accepts a lone pair from NH₃. What type of acid is BF₃?",a:"Lewis acid",hint:"Electron pair acceptor = Lewis acid",tag:"Identify"},
+    {q:"NaOH dissociates to give OH⁻ in water. Which theory (or theories) apply?",a:"Arrhenius and Brønsted–Lowry and Lewis",hint:"All three cover this",tag:"Identify"},
+    {q:"H₂O donates H⁺ to NH₃. What role does H₂O play?",a:"Brønsted–Lowry acid",hint:"It gives away H⁺",tag:"Identify"},
+    {q:"Fe³⁺ accepts a lone pair from H₂O. What is Fe³⁺?",a:"Lewis acid",hint:"No H⁺ involved — must be Lewis",tag:"Identify"},
+  ],
+};
+
+const NOM_DATA=[
+  {name:"Hydrochloric acid",formula:"HCl(aq)",type:"acid"},
+  {name:"Hydrobromic acid",formula:"HBr(aq)",type:"acid"},
+  {name:"Nitric acid",formula:"HNO₃",type:"acid"},
+  {name:"Nitrous acid",formula:"HNO₂",type:"acid"},
+  {name:"Sulfuric acid",formula:"H₂SO₄",type:"acid"},
+  {name:"Sulfurous acid",formula:"H₂SO₃",type:"acid"},
+  {name:"Phosphoric acid",formula:"H₃PO₄",type:"acid"},
+  {name:"Acetic acid",formula:"HC₂H₃O₂",type:"acid"},
+  {name:"Sodium hydroxide",formula:"NaOH",type:"base"},
+  {name:"Calcium hydroxide",formula:"Ca(OH)₂",type:"base"},
+  {name:"Ammonia",formula:"NH₃",type:"base"},
+  {name:"Water",formula:"H₂O",type:"ampho"},
+];
+
+const ELEMENTS=[
+  {n:1,sym:"H",name:"Hydrogen",group:1,period:1,type:"nonmetal"},
+  {n:2,sym:"He",name:"Helium",group:18,period:1,type:"noble"},
+  {n:3,sym:"Li",name:"Lithium",group:1,period:2,type:"alkali"},
+  {n:4,sym:"Be",name:"Beryllium",group:2,period:2,type:"alkaline"},
+  {n:5,sym:"B",name:"Boron",group:13,period:2,type:"metalloid"},
+  {n:6,sym:"C",name:"Carbon",group:14,period:2,type:"nonmetal"},
+  {n:7,sym:"N",name:"Nitrogen",group:15,period:2,type:"nonmetal"},
+  {n:8,sym:"O",name:"Oxygen",group:16,period:2,type:"nonmetal"},
+  {n:9,sym:"F",name:"Fluorine",group:17,period:2,type:"halogen"},
+  {n:10,sym:"Ne",name:"Neon",group:18,period:2,type:"noble"},
+  {n:11,sym:"Na",name:"Sodium",group:1,period:3,type:"alkali"},
+  {n:12,sym:"Mg",name:"Magnesium",group:2,period:3,type:"alkaline"},
+  {n:13,sym:"Al",name:"Aluminum",group:13,period:3,type:"transition"},
+  {n:14,sym:"Si",name:"Silicon",group:14,period:3,type:"metalloid"},
+  {n:15,sym:"P",name:"Phosphorus",group:15,period:3,type:"nonmetal"},
+  {n:16,sym:"S",name:"Sulfur",group:16,period:3,type:"nonmetal"},
+  {n:17,sym:"Cl",name:"Chlorine",group:17,period:3,type:"halogen"},
+  {n:18,sym:"Ar",name:"Argon",group:18,period:3,type:"noble"},
+  {n:19,sym:"K",name:"Potassium",group:1,period:4,type:"alkali"},
+  {n:20,sym:"Ca",name:"Calcium",group:2,period:4,type:"alkaline"},
+  {n:26,sym:"Fe",name:"Iron",group:8,period:4,type:"transition"},
+  {n:29,sym:"Cu",name:"Copper",group:11,period:4,type:"transition"},
+  {n:30,sym:"Zn",name:"Zinc",group:12,period:4,type:"transition"},
+  {n:35,sym:"Br",name:"Bromine",group:17,period:4,type:"halogen"},
+  {n:36,sym:"Kr",name:"Krypton",group:18,period:4,type:"noble"},
+  {n:47,sym:"Ag",name:"Silver",group:11,period:5,type:"transition"},
+  {n:53,sym:"I",name:"Iodine",group:17,period:5,type:"halogen"},
+  {n:56,sym:"Ba",name:"Barium",group:2,period:6,type:"alkaline"},
+  {n:79,sym:"Au",name:"Gold",group:11,period:6,type:"transition"},
+  {n:80,sym:"Hg",name:"Mercury",group:12,period:6,type:"transition"},
+  {n:82,sym:"Pb",name:"Lead",group:14,period:6,type:"transition"},
+];
+
+const EQUATIONS=[
+  {parts:["__H₂","+","__O₂","→","__H₂O"],answer:[2,1,2],label:"Hydrogen combustion"},
+  {parts:["__CH₄","+","__O₂","→","__CO₂","+","__H₂O"],answer:[1,2,1,2],label:"Methane combustion"},
+  {parts:["__N₂","+","__H₂","→","__NH₃"],answer:[1,3,2],label:"Haber process"},
+  {parts:["__Fe","+","__O₂","→","__Fe₂O₃"],answer:[4,3,2],label:"Iron oxidation"},
+  {parts:["__HCl","+","__NaOH","→","__NaCl","+","__H₂O"],answer:[1,1,1,1],label:"Acid-base neutralization"},
+  {parts:["__C₃H₈","+","__O₂","→","__CO₂","+","__H₂O"],answer:[1,5,3,4],label:"Propane combustion"},
+  {parts:["__KClO₃","→","__KCl","+","__O₂"],answer:[2,2,3],label:"Potassium chlorate decomposition"},
+  {parts:["__Al","+","__HCl","→","__AlCl₃","+","__H₂"],answer:[2,6,2,3],label:"Aluminum + HCl"},
+  {parts:["__Mg","+","__HCl","→","__MgCl₂","+","__H₂"],answer:[1,2,1,1],label:"Magnesium + HCl"},
+  {parts:["__Na","+","__H₂O","→","__NaOH","+","__H₂"],answer:[2,2,2,1],label:"Sodium + water"},
+];
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+const SECS=['home','ions','acids','periodic','equations','reference'];
+function show(id){
+  SECS.forEach(s=>document.getElementById('sec-'+s).classList.toggle('active',s===id));
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',SECS[i]===id));
+  if(id==='ions'&&iQueue.length===0)iStart();
+  if(id==='periodic')ptInit();
+  if(id==='equations'&&eqQueue.length===0)eqStart();
+  if(id==='reference')refBuild();
+  if(id==='acids')nomBuild();
+}
+
+// IONS
+let iMode='formula',iQueue=[],iCur=null,iIdx=0,iScore=0,iCt=0,iHist=[];
+function iSetMode(m,btn){iMode=m;document.querySelectorAll('#sec-ions .m-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');iStart();}
+function iStart(){iQueue=shuffle(IONS);iScore=0;iCt=0;iIdx=0;iHist=[];iStats();iPips();iLoad();}
+function iStats(){document.getElementById('i-score').textContent=iScore;document.getElementById('i-ct').textContent=iCt;document.getElementById('i-qn').textContent=(iIdx+1)+'/'+iQueue.length;}
+function iPips(){document.getElementById('i-pips').innerHTML=iHist.map(h=>`<div class="pip ${h?'hit':'miss'}"></div>`).join('');}
+function iNorm(u){return u.trim().toLowerCase().replace(/\s+/g,'').replace(/[₀-₉]/g,c=>'0123456789'['₀₁₂₃₄₅₆₇₈₉'.indexOf(c)]).replace(/[⁺⁻−–²³]/g,'');}
+function iMatch(u,c){if(iNorm(u)===iNorm(c))return true;if(iMode==='name')return u.trim().toLowerCase().replace(/\s+/g,'')===c.toLowerCase().replace(/\s+/g,'');if(iMode==='full'){const n=iNorm(u),cf=iNorm(iCur.formula),cc=iNorm(iCur.charge);return n===cf+cc;}return false;}
+function iCorrect(){return iMode==='formula'?iCur.formula:iMode==='name'?iCur.name:iMode==='charge'?iCur.charge:iCur.formula+' '+iCur.charge;}
+function iDisplay(){return iMode==='formula'?iCur.display:iMode==='name'?iCur.name:iMode==='charge'?iCur.charge:iCur.display;}
+function iLoad(){
+  if(iIdx>=iQueue.length){iEnd();return;}
+  iCur=iQueue[iIdx];
+  const inp=document.getElementById('i-inp');inp.value='';inp.disabled=false;
+  document.getElementById('i-reveal').className='reveal';document.getElementById('i-sg').className='self-grade';document.getElementById('i-next').className='btn btn-ghost btn-full next-btn';
+  setTimeout(()=>inp.focus(),50);
+  let lbl,txt,hint;
+  if(iMode==='formula'){lbl='What is the formula?';txt=iCur.name;hint='e.g. SO₄ or SO4';}
+  else if(iMode==='name'){lbl='What is this ion called?';txt=iCur.display;hint='Type the full name';}
+  else if(iMode==='charge'){lbl='What is the charge?';txt=iCur.name;hint='e.g. 2− or 2-';}
+  else{lbl='Formula and charge?';txt=iCur.name;hint='e.g. SO₄ 2− or SO4 2-';}
+  document.getElementById('i-plbl').textContent=lbl;document.getElementById('i-ptxt').textContent=txt;document.getElementById('i-phint').textContent=hint;iStats();
+}
+function iSubmit(){
+  const inp=document.getElementById('i-inp');const u=inp.value.trim();if(!u)return;inp.disabled=true;
+  const ok=iMatch(u,iCorrect());const rev=document.getElementById('i-reveal');
+  if(ok){rev.className='reveal show correct';document.getElementById('i-rlbl').textContent='✓ Correct!';document.getElementById('i-rans').textContent=u;document.getElementById('i-rcorrect').textContent='';iGrade(true);}
+  else{rev.className='reveal show wrong';document.getElementById('i-rlbl').textContent='Not quite — did you get it?';document.getElementById('i-rans').textContent='You wrote: '+u;document.getElementById('i-rcorrect').textContent='Answer: '+iDisplay();document.getElementById('i-sg').className='self-grade show';}
+}
+function iGrade(ok){if(ok){iScore+=10;iCt++;}iHist.push(ok);iIdx++;iPips();document.getElementById('i-sg').className='self-grade';const nb=document.getElementById('i-next');nb.className='btn btn-ghost btn-full next-btn show';nb.textContent=iIdx>=iQueue.length?'See results →':'Next →';}
+function iNext(){if(iIdx>=iQueue.length){iEnd();return;}iLoad();}
+function iEnd(){const p=Math.round((iCt/iQueue.length)*100);const m=p===100?'Perfect.':p>=80?'Strong.':p>=60?'Getting there.':'Keep at it.';document.getElementById('i-card').innerHTML=`<div class="end"><div style="color:var(--text3);font-size:13px;">Final score</div><div class="end-big">${iScore}</div><div class="end-sub">${iCt}/${iQueue.length} correct — ${p}%<br>${m}</div><div class="end-btns"><button class="end-btn" onclick="iStart()">Play again</button><button class="end-btn" onclick="show('reference')">Reference</button></div></div>`;}
+
+// ACIDS TAB SWITCH
+function acidsTab(id,btn){
+  ['theory','nomenclature','quiz'].forEach(t=>document.getElementById('acids-'+t).style.display=t===id?'block':'none');
+  document.querySelectorAll('.theory-tabs .t-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  if(id==='quiz'&&aqQueue.length===0)aqStart();
+}
+
+// NOMENCLATURE LIST
+function nomBuild(){const g=document.getElementById('nom-grid');if(g.children.length>0)return;g.innerHTML=NOM_DATA.map(d=>`<div class="nom-card"><div><div class="nom-name">${d.name}</div><div class="nom-formula">${d.formula}</div></div><span class="nom-type nom-${d.type}">${d.type==='ampho'?'Amphoteric':d.type==='acid'?'Acid':'Base'}</span></div>`).join('');}
+
+// ACIDS QUIZ
+let aqMode='def',aqQueue=[],aqCur=null,aqIdx=0,aqScore=0,aqCt=0,aqHist=[];
+function aqSetMode(m,btn){aqMode=m;document.querySelectorAll('#acids-quiz .m-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');aqStart();}
+function aqStart(){aqQueue=shuffle([...(AQ[aqMode]||AQ.def)]);aqScore=0;aqCt=0;aqIdx=0;aqHist=[];aqStats();aqPips();aqLoad();}
+function aqStats(){document.getElementById('aq-score').textContent=aqScore;document.getElementById('aq-ct').textContent=aqCt;document.getElementById('aq-qn').textContent=(aqIdx+1)+'/'+aqQueue.length;}
+function aqPips(){document.getElementById('aq-pips').innerHTML=aqHist.map(h=>`<div class="pip ${h?'hit':'miss'}"></div>`).join('');}
+function aqLoad(){
+  if(aqIdx>=aqQueue.length){aqEnd();return;}
+  aqCur=aqQueue[aqIdx];
+  const inp=document.getElementById('aq-inp');inp.value='';inp.disabled=false;
+  document.getElementById('aq-reveal').className='reveal';document.getElementById('aq-sg').className='self-grade';document.getElementById('aq-next').className='btn btn-ghost btn-full next-btn';
+  document.getElementById('aq-tag').textContent=aqCur.tag||'';
+  document.getElementById('aq-ptxt').textContent=aqCur.q;
+  document.getElementById('aq-phint').textContent=aqCur.hint||'';
+  setTimeout(()=>inp.focus(),50);aqStats();
+}
+function aqSubmit(){
+  const inp=document.getElementById('aq-inp');const u=inp.value.trim();if(!u)return;inp.disabled=true;
+  const ok=u.toLowerCase().replace(/\s+/g,'').includes(aqCur.a.toLowerCase().replace(/\s+/g,'').substring(0,6));
+  const rev=document.getElementById('aq-reveal');
+  if(ok){rev.className='reveal show correct';document.getElementById('aq-rlbl').textContent='✓ Correct!';document.getElementById('aq-rans').textContent=u;document.getElementById('aq-rcorrect').textContent='';aqGrade(true);}
+  else{rev.className='reveal show wrong';document.getElementById('aq-rlbl').textContent='Not quite — did you get it?';document.getElementById('aq-rans').textContent='You wrote: '+u;document.getElementById('aq-rcorrect').textContent='Answer: '+aqCur.a;document.getElementById('aq-sg').className='self-grade show';}
+}
+function aqGrade(ok){if(ok){aqScore+=10;aqCt++;}aqHist.push(ok);aqIdx++;aqPips();document.getElementById('aq-sg').className='self-grade';const nb=document.getElementById('aq-next');nb.className='btn btn-ghost btn-full next-btn show';nb.textContent=aqIdx>=aqQueue.length?'See results →':'Next →';}
+function aqNext(){if(aqIdx>=aqQueue.length){aqEnd();return;}aqLoad();}
+function aqEnd(){const p=Math.round((aqCt/aqQueue.length)*100);document.getElementById('aq-card').innerHTML=`<div class="end"><div style="color:var(--text3);font-size:13px;">Final score</div><div class="end-big">${aqScore}</div><div class="end-sub">${aqCt}/${aqQueue.length} correct — ${p}%</div><div class="end-btns"><button class="end-btn" onclick="aqStart()">Play again</button><button class="end-btn" onclick="acidsTab('theory',document.querySelector('.theory-tabs .t-tab'))">Review theory</button></div></div>`;}
+
+// PERIODIC TABLE
+let ptMode='symbol',ptQuiz=[],ptIdx=0,ptScore=0,ptCt=0,ptAnswered=false;
+function ptSetMode(m,btn){ptMode=m;document.querySelectorAll('#sec-periodic .m-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');ptStart();}
+function ptInit(){if(document.getElementById('pt-grid').children.length>0)return;ptBuildGrid();ptStart();}
+function ptBuildGrid(){
+  const g=document.getElementById('pt-grid');g.innerHTML='';const map={};
+  ELEMENTS.forEach(e=>map[`${e.period}-${e.group}`]=e);
+  for(let r=1;r<=7;r++)for(let c=1;c<=18;c++){
+    const e=map[`${r}-${c}`];const d=document.createElement('div');
+    if(e){d.className=`pt-cell ${e.type}`;d.innerHTML=`<span class="sym">${e.sym}</span><span class="anum">${e.n}</span>`;d.dataset.n=e.n;d.title=e.name;d.onclick=()=>ptClick(e.n);}
+    else d.className='pt-cell empty';g.appendChild(d);
+  }
+}
+function ptStart(){ptQuiz=shuffle([...ELEMENTS]).slice(0,10);ptIdx=0;ptScore=0;ptCt=0;ptAnswered=false;ptStats();ptLoad();}
+function ptStats(){document.getElementById('pt-score').textContent=ptScore;document.getElementById('pt-ct').textContent=ptCt;document.getElementById('pt-qn').textContent=(ptIdx+1)+'/10';}
+function ptLoad(){
+  if(ptIdx>=ptQuiz.length){ptEnd();return;}
+  ptAnswered=false;document.querySelectorAll('.pt-cell').forEach(c=>c.classList.remove('correct-hl','wrong-hl'));
+  document.getElementById('pt-reveal').className='reveal';document.getElementById('pt-next').className='btn btn-ghost btn-full next-btn';
+  const e=ptQuiz[ptIdx];let big,sub;
+  if(ptMode==='symbol'){big=e.sym;sub='Click the element with this symbol';}
+  else if(ptMode==='name'){big=e.name;sub='Click this element on the table';}
+  else{big='#'+e.n;sub='Click the element with this atomic number';}
+  document.getElementById('pt-big').textContent=big;document.getElementById('pt-sub').textContent=sub;ptStats();
+}
+function ptClick(n){
+  if(ptAnswered)return;ptAnswered=true;const correct=ptQuiz[ptIdx].n;const ok=n===correct;
+  document.querySelector(`.pt-cell[data-n="${n}"]`).classList.add(ok?'correct-hl':'wrong-hl');
+  if(!ok)document.querySelector(`.pt-cell[data-n="${correct}"]`).classList.add('correct-hl');
+  const rev=document.getElementById('pt-reveal');
+  if(ok){ptScore+=10;ptCt++;rev.className='reveal show correct';document.getElementById('pt-rlbl').textContent='✓ Correct!';document.getElementById('pt-rans').textContent=ptQuiz[ptIdx].name+' — '+ptQuiz[ptIdx].sym+', #'+ptQuiz[ptIdx].n;}
+  else{rev.className='reveal show wrong';document.getElementById('pt-rlbl').textContent='✗ Incorrect. Correct:';document.getElementById('pt-rans').textContent=ptQuiz[ptIdx].name+' — '+ptQuiz[ptIdx].sym+', #'+ptQuiz[ptIdx].n;}
+  ptIdx++;const nb=document.getElementById('pt-next');nb.className='btn btn-ghost btn-full next-btn show';nb.textContent=ptIdx>=ptQuiz.length?'See results →':'Next →';
+}
+function ptNext(){if(ptIdx>=ptQuiz.length){ptEnd();return;}ptLoad();}
+function ptEnd(){const p=Math.round((ptCt/10)*100);document.querySelector('#sec-periodic .card').innerHTML=`<div class="end"><div style="color:var(--text3);font-size:13px;">Final score</div><div class="end-big">${ptScore}</div><div class="end-sub">${ptCt}/10 correct — ${p}%</div><div class="end-btns"><button class="end-btn" onclick="ptBuildGrid();ptStart()">Play again</button></div></div>`;}
+
+// EQUATIONS
+let eqQueue=[],eqIdx=0,eqScore=0,eqCt=0,eqBlanks=[],eqSel=null;
+function eqStart(){eqQueue=shuffle([...EQUATIONS]);eqIdx=0;eqScore=0;eqCt=0;eqStats();eqLoad();}
+function eqStats(){document.getElementById('eq-score').textContent=eqScore;document.getElementById('eq-ct').textContent=eqCt;document.getElementById('eq-qn').textContent=(eqIdx+1)+'/'+eqQueue.length;}
+function eqLoad(){
+  if(eqIdx>=eqQueue.length){eqEnd();return;}
+  eqSel=null;const eq=eqQueue[eqIdx];eqBlanks=new Array(eq.answer.length).fill(null);
+  document.getElementById('eq-reveal').className='reveal';document.getElementById('eq-next').className='btn btn-ghost btn-full next-btn';
+  let bi=0,html='';
+  eq.parts.forEach(p=>{
+    if(p.startsWith('__')){const idx=bi;html+=`<span class="eq-blank" id="eqb${idx}" onclick="eqSel=${idx};document.querySelectorAll('.eq-blank').forEach(b=>{b.classList.remove('selected-blank');});this.classList.add('selected-blank');">${eqBlanks[idx]||'?'}</span>${p.slice(2)} `;bi++;}
+    else html+=`${p} `;
+  });
+  document.getElementById('eq-disp').innerHTML=html;
+  const nb=document.getElementById('eq-nums');nb.innerHTML='';
+  [1,2,3,4,5,6,7,8,9].forEach(n=>{
+    const b=document.createElement('button');b.className='eq-num';b.textContent=n;
+    b.onclick=()=>{if(eqSel===null)return;eqBlanks[eqSel]=n;const sp=document.getElementById('eqb'+eqSel);sp.textContent=n;sp.classList.add('filled');sp.classList.remove('selected-blank');eqSel=null;};
+    nb.appendChild(b);
+  });
+  eqStats();
+}
+function eqCheck(){
+  const eq=eqQueue[eqIdx];
+  if(eqBlanks.some(b=>b===null)){document.getElementById('eq-reveal').className='reveal show wrong';document.getElementById('eq-rlbl').textContent='Fill in all blanks first.';document.getElementById('eq-rans').textContent='';return;}
+  const ok=eqBlanks.every((b,i)=>b===eq.answer[i]);
+  document.querySelectorAll('.eq-blank').forEach((b,i)=>b.classList.add(eqBlanks[i]===eq.answer[i]?'correct-eq':'wrong-eq'));
+  const rev=document.getElementById('eq-reveal');
+  if(ok){eqScore+=10;eqCt++;rev.className='reveal show correct';document.getElementById('eq-rlbl').textContent='✓ Balanced correctly.';document.getElementById('eq-rans').textContent=eq.label;}
+  else{rev.className='reveal show wrong';document.getElementById('eq-rlbl').textContent='✗ Not balanced. Correct coefficients:';document.getElementById('eq-rans').textContent=eq.answer.join(', ')+' — '+eq.label;}
+  eqIdx++;const nb=document.getElementById('eq-next');nb.className='btn btn-ghost btn-full next-btn show';nb.textContent=eqIdx>=eqQueue.length?'See results →':'Next →';
+}
+function eqSkip(){eqIdx++;eqStats();if(eqIdx>=eqQueue.length)eqEnd();else eqLoad();}
+function eqNext(){if(eqIdx>=eqQueue.length){eqEnd();return;}eqLoad();}
+function eqEnd(){const p=Math.round((eqCt/eqQueue.length)*100);document.getElementById('eq-card').innerHTML=`<div class="end"><div style="color:var(--text3);font-size:13px;">Final score</div><div class="end-big">${eqScore}</div><div class="end-sub">${eqCt}/${eqQueue.length} correct — ${p}%</div><div class="end-btns"><button class="end-btn" onclick="eqQueue=[];eqStart()">Play again</button></div></div>`;}
+
+// REFERENCE
+function refBuild(){const b=document.getElementById('ref-body');if(b.children.length>0)return;const cc=c=>c==='1+'?'ch-pos':c==='1−'?'ch-1':c==='2−'?'ch-2':'ch-3';b.innerHTML=IONS.map(i=>`<tr><td>${i.name}</td><td class="formula">${i.display}</td><td><span class="ch-badge ${cc(i.charge)}">${i.charge}</span></td></tr>`).join('');}
+
+// keyboard
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const in1=document.getElementById('i-inp'),nb1=document.getElementById('i-next');
+  const in2=document.getElementById('aq-inp'),nb2=document.getElementById('aq-next');
+  if(nb1&&nb1.classList.contains('show'))iNext();
+  else if(in1&&!in1.disabled&&document.getElementById('sec-ions').classList.contains('active'))iSubmit();
+  else if(nb2&&nb2.classList.contains('show'))aqNext();
+  else if(in2&&!in2.disabled&&document.getElementById('sec-acids').classList.contains('active'))aqSubmit();
+});
+
+iStart();
+</script>
+</body>
+</html>
