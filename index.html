@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChemDrill — AP Chemistry Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: #2a2a3d;
+    --accent: #7c6aff;
+    --accent2: #ff6a9b;
+    --accent3: #6affd4;
+    --text: #f0f0ff;
+    --text2: #8888aa;
+    --text3: #555570;
+    --green: #4ade80;
+    --red: #f87171;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .nav-logo span { color: var(--accent2); }
+  .nav-tabs {
+    display: flex; gap: 4px;
+  }
+  .nav-tab {
+    background: none; border: none; cursor: pointer;
+    font-family: var(--sans); font-size: 13px; font-weight: 500;
+    color: var(--text2); padding: 6px 14px; border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .nav-tab:hover { color: var(--text); background: var(--surface2); }
+  .nav-tab.active { color: var(--text); background: var(--surface2); }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 3rem;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse at center, rgba(124,106,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    color: var(--accent); background: rgba(124,106,255,0.12);
+    border: 1px solid rgba(124,106,255,0.3);
+    padding: 4px 12px; border-radius: 99px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p {
+    color: var(--text2); font-size: 16px; max-width: 480px; margin: 0 auto 2.5rem;
+  }
+  .hero-cards {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .hero-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    min-width: 140px;
+  }
+  .hero-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .hero-card-icon { font-size: 20px; margin-bottom: 6px; }
+  .hero-card-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .hero-card-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* SECTIONS */
+  .section { display: none; padding: 2rem; max-width: 720px; margin: 0 auto; }
+  .section.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header { margin-bottom: 2rem; }
+  .section-header h2 {
+    font-family: var(--mono); font-size: 1.5rem; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .section-header p { color: var(--text2); font-size: 14px; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  /* STATS ROW */
+  .stats-row { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+  .stat {
+    flex: 1; background: var(--surface2); border-radius: var(--radius);
+    padding: 0.75rem 1rem; text-align: center;
+  }
+  .stat-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat-val { font-size: 22px; font-weight: 700; font-family: var(--mono); color: var(--text); }
+
+  /* PIPS */
+  .pip-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 1.25rem; min-height: 14px; }
+  .pip { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+  .pip.hit { background: var(--green); }
+  .pip.miss { background: var(--red); }
+
+  /* MODE TABS */
+  .mode-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .mode-tab {
+    padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border);
+    background: none; color: var(--text2); font-size: 12px; font-family: var(--sans);
+    cursor: pointer; transition: all 0.15s; font-weight: 500;
+  }
+  .mode-tab:hover { color: var(--text); border-color: var(--text3); }
+  .mode-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* PROMPT */
+  .prompt-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .prompt-text {
+    font-family: var(--mono); font-size: 26px; font-weight: 700;
+    color: var(--text); margin-bottom: 4px; line-height: 1.2;
+  }
+  .prompt-hint { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+
+  /* INPUT */
+  .input-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .input-row input {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0 1rem;
+    font-family: var(--mono); font-size: 16px; color: var(--text);
+    height: 46px; outline: none; transition: border-color 0.2s;
+  }
+  .input-row input:focus { border-color: var(--accent); }
+  .input-row input::placeholder { color: var(--text3); }
+  .btn {
+    padding: 0 1.5rem; height: 46px;
+    background: var(--accent); border: none; border-radius: var(--radius);
+    color: #fff; font-size: 14px; font-weight: 600; font-family: var(--sans);
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .btn:hover { background: #6a58f0; transform: translateY(-1px); }
+  .btn-ghost {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+  }
+  .btn-ghost:hover { background: var(--border); }
+  .btn-full { width: 100%; justify-content: center; display: flex; align-items: center; }
+
+  /* REVEAL */
+  .reveal { border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; display: none; }
+  .reveal.show { display: block; animation: fadeIn 0.2s ease; }
+  .reveal.correct { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); }
+  .reveal.wrong { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .reveal-label { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .reveal.correct .reveal-label { color: var(--green); }
+  .reveal.wrong .reveal-label { color: var(--red); }
+  .reveal-ans { font-family: var(--mono); font-size: 18px; }
+  .reveal.correct .reveal-ans { color: var(--green); }
+  .reveal.wrong .reveal-ans { color: var(--red); }
+  .reveal-correct-ans { font-size: 13px; color: var(--text2); margin-top: 4px; font-family: var(--mono); }
+
+  /* SELF GRADE */
+  .self-grade { display: none; gap: 8px; margin-bottom: 1rem; }
+  .self-grade.show { display: flex; }
+  .grade-btn { flex: 1; height: 42px; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: var(--sans); }
+  .grade-got { background: rgba(74,222,128,0.15); color: var(--green); }
+  .grade-got:hover { background: rgba(74,222,128,0.25); }
+  .grade-miss { background: rgba(248,113,113,0.15); color: var(--red); }
+  .grade-miss:hover { background: rgba(248,113,113,0.25); }
+
+  .next-btn { display: none; }
+  .next-btn.show { display: flex; }
+
+  /* PERIODIC TABLE SECTION */
+  .pt-grid {
+    display: grid;
+    grid-template-columns: repeat(18, 1fr);
+    gap: 2px;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+  .pt-cell {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    min-width: 28px;
+    background: var(--surface2);
+    border: 1px solid transparent;
+    position: relative;
+  }
+  .pt-cell:hover { border-color: var(--accent); z-index: 2; transform: scale(1.1); }
+  .pt-cell.highlighted { background: var(--accent); border-color: var(--accent); }
+  .pt-cell.correct-hl { background: rgba(74,222,128,0.3); border-color: var(--green); }
+  .pt-cell.wrong-hl { background: rgba(248,113,113,0.3); border-color: var(--red); }
+  .pt-cell .sym { font-family: var(--mono); font-size: 8px; font-weight: 700; color: var(--text); }
+  .pt-cell .num { font-size: 6px; color: var(--text3); }
+  .pt-cell.empty { background: none; border: none; cursor: default; }
+  .pt-cell.alkali { background: rgba(255,106,155,0.15); }
+  .pt-cell.alkaline { background: rgba(255,180,80,0.15); }
+  .pt-cell.transition { background: rgba(124,106,255,0.15); }
+  .pt-cell.metalloid { background: rgba(106,255,212,0.15); }
+  .pt-cell.nonmetal { background: rgba(100,220,100,0.15); }
+  .pt-cell.halogen { background: rgba(255,220,80,0.15); }
+  .pt-cell.noble { background: rgba(180,100,255,0.15); }
+  .pt-cell.lanthanide { background: rgba(255,140,100,0.1); }
+  .pt-cell.actinide { background: rgba(100,200,255,0.1); }
+
+  .pt-quiz-prompt {
+    text-align: center; margin-bottom: 1.5rem;
+  }
+  .pt-quiz-prompt .big { font-family: var(--mono); font-size: 2.5rem; font-weight: 700; color: var(--accent); }
+  .pt-quiz-prompt .sub { font-size: 14px; color: var(--text2); margin-top: 4px; }
+
+  /* EQUATION BALANCER */
+  .eq-display {
+    font-family: var(--mono); font-size: 1.4rem; text-align: center;
+    padding: 1.5rem; background: var(--surface2); border-radius: var(--radius);
+    margin-bottom: 1.5rem; line-height: 1.8; color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .eq-blank {
+    display: inline-block;
+    width: 36px; height: 32px; line-height: 32px; text-align: center;
+    background: var(--surface); border: 2px solid var(--accent);
+    border-radius: 6px; margin: 0 4px; cursor: pointer;
+    color: var(--accent); font-weight: 700; transition: all 0.15s;
+    vertical-align: middle;
+  }
+  .eq-blank.filled { color: var(--text); border-color: var(--border); background: var(--surface2); }
+  .eq-blank.correct-eq { border-color: var(--green); color: var(--green); background: rgba(74,222,128,0.1); }
+  .eq-blank.wrong-eq { border-color: var(--red); color: var(--red); background: rgba(248,113,113,0.1); }
+  .eq-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
+  .eq-num-btn {
+    width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text); font-family: var(--mono);
+    font-size: 16px; cursor: pointer; transition: all 0.15s;
+  }
+  .eq-num-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .eq-num-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* REFERENCE TABLE */
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .ref-table th { text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); border-bottom: 1px solid var(--border); font-weight: 600; }
+  .ref-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: middle; }
+  .ref-table tr:hover td { background: var(--surface2); }
+  .ref-table td:first-child { color: var(--text); font-weight: 500; }
+  .ref-table td.mono { font-family: var(--mono); color: var(--accent); }
+  .charge-badge {
+    display: inline-block; font-family: var(--mono); font-size: 12px; font-weight: 700;
+    padding: 2px 8px; border-radius: 99px;
+  }
+  .charge-pos { background: rgba(255,106,155,0.15); color: var(--accent2); }
+  .charge-neg1 { background: rgba(124,106,255,0.15); color: var(--accent); }
+  .charge-neg2 { background: rgba(106,255,212,0.15); color: var(--accent3); }
+  .charge-neg3 { background: rgba(255,200,80,0.15); color: #ffc850; }
+
+  /* END SCREEN */
+  .end-screen { text-align: center; padding: 2rem 1rem; }
+  .end-score-big { font-family: var(--mono); font-size: 5rem; font-weight: 700; color: var(--accent); line-height: 1; margin: 1rem 0 0.5rem; }
+  .end-sub { color: var(--text2); font-size: 15px; margin-bottom: 2rem; }
+  .end-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 2rem;
+    color: var(--text3); font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 4rem;
+    font-family: var(--mono);
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 1rem; }
+    .hero { padding: 3rem 1rem 2rem; }
+    .section { padding: 1.25rem; }
+    .hero-cards { flex-direction: column; align-items: center; }
+    .hero-card { width: 100%; max-width: 280px; }
+    .pt-grid { transform: scale(0.85); transform-origin: top left; margin-bottom: -2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Chem<span>Drill</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('home')">Home</button>
+    <button class="nav-tab" onclick="showSection('ions')">Ions</button>
+    <button class="nav-tab" onclick="showSection('periodic')">Periodic</button>
+    <button class="nav-tab" onclick="showSection('equations')">Equations</button>
+    <button class="nav-tab" onclick="showSection('reference')">Reference</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="sec-home" class="section active">
+  <div class="hero">
+    <div class="hero-tag">AP Chemistry Practice</div>
+    <h1>Drill smarter,<br><em>score higher.</em></h1>
+    <p>Active recall practice for AP Chem — polyatomic ions, periodic table, equation balancing, and more.</p>
+    <div class="hero-cards">
+      <div class="hero-card" onclick="showSection('ions')">
+        <div class="hero-card-icon">⚡</div>
+        <div class="hero-card-title">Polyatomic Ions</div>
+        <div class="hero-card-sub">12 AP Chem ions</div>
+      </div>
+      <div class="hero-card" onclick="showSection('periodic')">
+        <div class="hero-card-icon">🔬</div>
+        <div class="hero-card-title">Periodic Table</div>
+        <div class="hero-card-sub">Elements quiz</div>
+      </div>
+      <div class="hero-card" onclick="showSection('equations')">
+        <div class="hero-card-icon">⚖️</div>
+        <div class="hero-card-title">Equations</div>
+        <div class="hero-card-sub">Balance reactions</div>
+      </div>
+      <div class="hero-card" onclick="showSection('reference')">
+        <div class="hero-card-icon">📋</div>
+        <div class="hero-card-title">Reference</div>
+        <div class="hero-card-sub">Quick lookup</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IONS -->
+<div id="sec-ions" class="section">
+  <div class="section-header">
+    <h2>Polyatomic Ions</h2>
+    <p>Type your answer from memory — active recall only, no multiple choice.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-label">Score</div><div class="stat-val" id="ion-score">0</div></div>
+    <div class="stat"><div class="stat-label">Correct</div><div class="stat-val" id="ion-ct">0</div></div>
+    <div class="stat"><div class="stat-label">Card</div><div class="stat-val" id="ion-qnum">1/12</div></div>
+  </div>
+
+  <div class="pip-row" id="ion-pips"></div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="ionSetMode('formula',this)">Name → Formula</button>
+    <button class="mode-tab" onclick="ionSetMode('name',this)">Formula → Name</button>
+    <button class="mode-tab" onclick="ionSetMode('charge',this)">Name → Charge</button>
+    <button class="mode-tab" onclick="ionSetMode('full',this)">Name → Formula + Charge</button>
+  </div>
+
+  <div class="card" id="ion-card">
+    <div class="prompt-label" id="ion-p-label">What is the formula?</div>
+    <div class="prompt-text" id="ion-p-text"></div>
+    <div class="prompt-hint" id="ion-p-hint"></div>
+    <div class="input-row">
+      <input type="text" id="ion-input" placeholder="Type your answer..." autocomplete="off" autocorrect="off" spellcheck="false"/>
+      <button class="btn" onclick="ionSubmit()">Check</button>
+    </div>
+    <div class="reveal" id="ion-reveal">
+      <div class="reveal-label" id="ion-r-label"></div>
+      <div class="reveal-ans" id="ion-r-ans"></div>
+      <div class="reveal-correct-ans" id="ion-r-correct"></div>
+    </div>
+    <div class="self-grade" id="ion-self-grade">
+      <button class="grade-btn grade-got" onclick="ionGrade(true)">✓ Got it</button>
+      <button class="grade-btn grade-miss" onclick="ionGrade(false)">✗ Missed it</button>
+    </div>
+    <button class="btn btn-ghost btn-full next-btn" id="ion-next" onclick="ionNext()">Next →</button>
+  </div>
+</div>
+
+<!-- PERIODIC TABLE -->
+<div id="sec-periodic" class="section">
+  <div class="section-header">
+    <h2>Periodic Table Quiz</h2>
+    <p>Click the correct element on the table.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-label">Score</div><div class="stat-val" id="pt-score">0</div></div>
+    <div class="stat"><div class="stat-label">Correct</div><div class="stat-val" id="pt-ct">0</div></div>
+    <div class="stat"><div class="stat-label">Question</div><div class="stat-val" id="pt-qnum">1/10</div></div>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="ptSetMode('symbol',this)">Find by Symbol</button>
+    <button class="mode-tab" onclick="ptSetMode('name',this)">Find by Name</button>
+    <button class="mode-tab" onclick="ptSetMode('number',this)">Find by Atomic #</button>
+  </div>
+
+  <div class="card">
+    <div class="pt-quiz-prompt" id="pt-prompt">
+      <div class="big" id="pt-prompt-big">H</div>
+      <div class="sub" id="pt-prompt-sub">Click the element on the table</div>
+    </div>
+    <div class="pt-grid" id="pt-grid"></div>
+    <div class="reveal" id="pt-reveal">
+      <div class="reveal-label" id="pt-r-label"></div>
+      <div class="reveal-ans" id="pt-r-ans"></div>
+    </div>
+    <button class="btn btn-ghost btn-full next-btn" id="pt-next" onclick="ptNext()" style="margin-top:1rem;">Next →</button>
+  </div>
+</div>
+
+<!-- EQUATIONS -->
+<div id="sec-equations" class="section">
+  <div class="section-header">
+    <h2>Balance Equations</h2>
+    <p>Select a coefficient blank, then tap a number to fill it in.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-label">Score</div><div class="stat-val" id="eq-score">0</div></div>
+    <div class="stat"><div class="stat-label">Correct</div><div class="stat-val" id="eq-ct">0</div></div>
+    <div class="stat"><div class="stat-label">Question</div><div class="stat-val" id="eq-qnum">1/10</div></div>
+  </div>
+
+  <div class="card" id="eq-card">
+    <div class="eq-display" id="eq-display"></div>
+    <div class="eq-controls" id="eq-controls">
+      <div style="width:100%;text-align:center;font-size:12px;color:var(--text3);margin-bottom:4px;">Select a blank above, then pick a coefficient:</div>
+    </div>
+    <div id="eq-num-btns" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:1rem;"></div>
+    <div class="reveal" id="eq-reveal">
+      <div class="reveal-label" id="eq-r-label"></div>
+      <div class="reveal-ans" id="eq-r-ans"></div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="eqCheck()">Check</button>
+      <button class="btn btn-ghost" style="flex:1;" onclick="eqSkip()">Skip →</button>
+    </div>
+    <button class="btn btn-ghost btn-full next-btn" id="eq-next" onclick="eqNext()" style="margin-top:8px;">Next →</button>
+  </div>
+</div>
+
+<!-- REFERENCE -->
+<div id="sec-reference" class="section">
+  <div class="section-header">
+    <h2>Reference Sheet</h2>
+    <p>AP Chem polyatomic ions — quick lookup while you study.</p>
+  </div>
+  <div class="card">
+    <table class="ref-table">
+      <thead>
+        <tr><th>Name</th><th>Formula</th><th>Charge</th></tr>
+      </thead>
+      <tbody id="ref-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>ChemDrill — built for AP Chem students</footer>
+
+<script>
+// ============ DATA ============
+const IONS = [
+  { name:"Ammonium", formula:"NH₄", charge:"1+", display:"NH₄⁺" },
+  { name:"Hydroxide", formula:"OH", charge:"1−", display:"OH⁻" },
+  { name:"Nitrate", formula:"NO₃", charge:"1−", display:"NO₃⁻" },
+  { name:"Nitrite", formula:"NO₂", charge:"1−", display:"NO₂⁻" },
+  { name:"Sulfate", formula:"SO₄", charge:"2−", display:"SO₄²⁻" },
+  { name:"Sulfite", formula:"SO₃", charge:"2−", display:"SO₃²⁻" },
+  { name:"Carbonate", formula:"CO₃", charge:"2−", display:"CO₃²⁻" },
+  { name:"Hydrogen carbonate", formula:"HCO₃", charge:"1−", display:"HCO₃⁻" },
+  { name:"Phosphate", formula:"PO₄", charge:"3−", display:"PO₄³⁻" },
+  { name:"Acetate", formula:"C₂H₃O₂", charge:"1−", display:"C₂H₃O₂⁻" },
+  { name:"Permanganate", formula:"MnO₄", charge:"1−", display:"MnO₄⁻" },
+  { name:"Dichromate", formula:"Cr₂O₇", charge:"2−", display:"Cr₂O₇²⁻" },
+];
+
+const ELEMENTS = [
+  {n:1,sym:"H",name:"Hydrogen",group:1,period:1,type:"nonmetal"},
+  {n:2,sym:"He",name:"Helium",group:18,period:1,type:"noble"},
+  {n:3,sym:"Li",name:"Lithium",group:1,period:2,type:"alkali"},
+  {n:4,sym:"Be",name:"Beryllium",group:2,period:2,type:"alkaline"},
+  {n:5,sym:"B",name:"Boron",group:13,period:2,type:"metalloid"},
+  {n:6,sym:"C",name:"Carbon",group:14,period:2,type:"nonmetal"},
+  {n:7,sym:"N",name:"Nitrogen",group:15,period:2,type:"nonmetal"},
+  {n:8,sym:"O",name:"Oxygen",group:16,period:2,type:"nonmetal"},
+  {n:9,sym:"F",name:"Fluorine",group:17,period:2,type:"halogen"},
+  {n:10,sym:"Ne",name:"Neon",group:18,period:2,type:"noble"},
+  {n:11,sym:"Na",name:"Sodium",group:1,period:3,type:"alkali"},
+  {n:12,sym:"Mg",name:"Magnesium",group:2,period:3,type:"alkaline"},
+  {n:13,sym:"Al",name:"Aluminum",group:13,period:3,type:"transition"},
+  {n:14,sym:"Si",name:"Silicon",group:14,period:3,type:"metalloid"},
+  {n:15,sym:"P",name:"Phosphorus",group:15,period:3,type:"nonmetal"},
+  {n:16,sym:"S",name:"Sulfur",group:16,period:3,type:"nonmetal"},
+  {n:17,sym:"Cl",name:"Chlorine",group:17,period:3,type:"halogen"},
+  {n:18,sym:"Ar",name:"Argon",group:18,period:3,type:"noble"},
+  {n:19,sym:"K",name:"Potassium",group:1,period:4,type:"alkali"},
+  {n:20,sym:"Ca",name:"Calcium",group:2,period:4,type:"alkaline"},
+  {n:26,sym:"Fe",name:"Iron",group:8,period:4,type:"transition"},
+  {n:29,sym:"Cu",name:"Copper",group:11,period:4,type:"transition"},
+  {n:30,sym:"Zn",name:"Zinc",group:12,period:4,type:"transition"},
+  {n:35,sym:"Br",name:"Bromine",group:17,period:4,type:"halogen"},
+  {n:36,sym:"Kr",name:"Krypton",group:18,period:4,type:"noble"},
+  {n:37,sym:"Rb",name:"Rubidium",group:1,period:5,type:"alkali"},
+  {n:47,sym:"Ag",name:"Silver",group:11,period:5,type:"transition"},
+  {n:53,sym:"I",name:"Iodine",group:17,period:5,type:"halogen"},
+  {n:56,sym:"Ba",name:"Barium",group:2,period:6,type:"alkaline"},
+  {n:79,sym:"Au",name:"Gold",group:11,period:6,type:"transition"},
+  {n:80,sym:"Hg",name:"Mercury",group:12,period:6,type:"transition"},
+  {n:82,sym:"Pb",name:"Lead",group:14,period:6,type:"transition"},
+];
+
+const EQUATIONS = [
+  { blanks:[1,1,1,2], parts:["__H₂", "+", "__O₂", "→", "__H₂O"], answer:[2,1,2], label:"Hydrogen + Oxygen → Water" },
+  { blanks:[1,1,1], parts:["__CH₄", "+", "__O₂", "→", "__CO₂", "+", "__H₂O"], answer:[1,2,1,2], label:"Combustion of methane" },
+  { blanks:[1,1,1,1], parts:["__N₂", "+", "__H₂", "→", "__NH₃"], answer:[1,3,2], label:"Haber process (nitrogen fixation)" },
+  { blanks:[1,1,1,1], parts:["__Fe", "+", "__O₂", "→", "__Fe₂O₃"], answer:[4,3,2], label:"Iron rusting" },
+  { blanks:[1,1,1], parts:["__HCl", "+", "__NaOH", "→", "__NaCl", "+", "__H₂O"], answer:[1,1,1,1], label:"Acid-base neutralization" },
+  { blanks:[1,1,1,1], parts:["__C₃H₈", "+", "__O₂", "→", "__CO₂", "+", "__H₂O"], answer:[1,5,3,4], label:"Combustion of propane" },
+  { blanks:[1,1,1], parts:["__KClO₃", "→", "__KCl", "+", "__O₂"], answer:[2,2,3], label:"Decomposition of potassium chlorate" },
+  { blanks:[1,1,1], parts:["__Al", "+", "__HCl", "→", "__AlCl₃", "+", "__H₂"], answer:[2,6,2,3], label:"Aluminum + hydrochloric acid" },
+  { blanks:[1,1,1,1], parts:["__Mg", "+", "__HCl", "→", "__MgCl₂", "+", "__H₂"], answer:[1,2,1,1], label:"Magnesium + HCl" },
+  { blanks:[1,1,1,1], parts:["__Na", "+", "__H₂O", "→", "__NaOH", "+", "__H₂"], answer:[2,2,2,1], label:"Sodium + water" },
+];
+
+// ============ NAV ============
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const names = ['home','ions','periodic','equations','reference'];
+  tabs[names.indexOf(id)].classList.add('active');
+  if(id==='ions' && ionQueue.length===0) ionStart();
+  if(id==='periodic') ptInit();
+  if(id==='equations' && eqQueue.length===0) eqStart();
+  if(id==='reference') refBuild();
+}
+
+// ============ IONS ============
+let ionMode='formula', ionQueue=[], ionCurrent=null, ionIdx=0;
+let ionScore=0, ionCt=0, ionHistory=[];
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function ionSetMode(m,btn){
+  ionMode=m;
+  document.querySelectorAll('#sec-ions .mode-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ionStart();
+}
+
+function ionStart(){
+  ionQueue=shuffle([...IONS]);
+  ionScore=0;ionCt=0;ionIdx=0;ionHistory=[];
+  ionUpdateStats();ionRenderPips();ionLoadCard();
+}
+
+function ionUpdateStats(){
+  document.getElementById('ion-score').textContent=ionScore;
+  document.getElementById('ion-ct').textContent=ionCt;
+  document.getElementById('ion-qnum').textContent=(ionIdx+1)+'/'+ionQueue.length;
+}
+
+function ionRenderPips(){
+  document.getElementById('ion-pips').innerHTML=ionHistory.map(h=>`<div class="pip ${h?'hit':'miss'}"></div>`).join('');
+}
+
+function normStr(s){
+  return s.trim().toLowerCase()
+    .replace(/\s+/g,'')
+    .replace(/[₀₁₂₃₄₅₆₇₈₉]/g,c=>['0','1','2','3','4','5','6','7','8','9']['₀₁₂₃₄₅₆₇₈₉'.indexOf(c)])
+    .replace(/[⁺⁻]/g,'')
+    .replace(/[−–]/g,'-')
+    .replace(/²|³/g,c=>c==='²'?'2':'3');
+}
+
+function ionCheck(user,correct){
+  if(normStr(user)===normStr(correct)) return true;
+  if(ionMode==='name'){
+    return user.trim().toLowerCase().replace(/\s+/g,'')===correct.toLowerCase().replace(/\s+/g,'');
+  }
+  if(ionMode==='full'){
+    const u=normStr(user), cf=normStr(ionCurrent.formula), cc=normStr(ionCurrent.charge);
+    return u===cf+cc||u===cf+' '+cc;
+  }
+  return false;
+}
+
+function ionGetCorrect(){
+  if(ionMode==='formula') return ionCurrent.formula;
+  if(ionMode==='name') return ionCurrent.name;
+  if(ionMode==='charge') return ionCurrent.charge;
+  return ionCurrent.formula+' '+ionCurrent.charge;
+}
+
+function ionGetDisplay(){
+  if(ionMode==='formula') return ionCurrent.display;
+  if(ionMode==='name') return ionCurrent.name;
+  if(ionMode==='charge') return ionCurrent.charge;
+  return ionCurrent.display;
+}
+
+function ionLoadCard(){
+  if(ionIdx>=ionQueue.length){ionShowEnd();return;}
+  ionCurrent=ionQueue[ionIdx];
+  const inp=document.getElementById('ion-input');
+  inp.value='';inp.disabled=false;
+  document.getElementById('ion-reveal').className='reveal';
+  document.getElementById('ion-self-grade').className='self-grade';
+  document.getElementById('ion-next').className='btn btn-ghost btn-full next-btn';
+  setTimeout(()=>inp.focus(),50);
+
+  let label,text,hint;
+  if(ionMode==='formula'){label='What is the formula?';text=ionCurrent.name;hint='e.g. SO₄ or SO4';}
+  else if(ionMode==='name'){label='What is this ion called?';text=ionCurrent.display;hint='Type the full name';}
+  else if(ionMode==='charge'){label='What is the charge?';text=ionCurrent.name;hint='e.g. 2− or 2-';}
+  else{label='What is the formula and charge?';text=ionCurrent.name;hint='e.g. SO₄ 2− or SO4 2-';}
+
+  document.getElementById('ion-p-label').textContent=label;
+  document.getElementById('ion-p-text').textContent=text;
+  document.getElementById('ion-p-hint').textContent=hint;
+  ionUpdateStats();
+}
+
+function ionSubmit(){
+  const inp=document.getElementById('ion-input');
+  const user=inp.value.trim();
+  if(!user) return;
+  inp.disabled=true;
+  const correct=ionGetCorrect();
+  const isMatch=ionCheck(user,correct);
+  const reveal=document.getElementById('ion-reveal');
+  if(isMatch){
+    reveal.className='reveal show correct';
+    document.getElementById('ion-r-label').textContent='✓ Correct!';
+    document.getElementById('ion-r-ans').textContent=user;
+    document.getElementById('ion-r-correct').textContent='';
+    ionGrade(true);
+  } else {
+    reveal.className='reveal show wrong';
+    document.getElementById('ion-r-label').textContent='Not quite — did you get it?';
+    document.getElementById('ion-r-ans').textContent='You wrote: '+user;
+    document.getElementById('ion-r-correct').textContent='Answer: '+ionGetDisplay();
+    document.getElementById('ion-self-grade').className='self-grade show';
+  }
+}
+
+function ionGrade(got){
+  if(got){ionScore+=10;ionCt++;}
+  ionHistory.push(got);
+  ionIdx++;
+  ionRenderPips();
+  document.getElementById('ion-self-grade').className='self-grade';
+  const nb=document.getElementById('ion-next');
+  nb.className='btn btn-ghost btn-full next-btn show';
+  nb.textContent=ionIdx>=ionQueue.length?'See results →':'Next →';
+}
+
+function ionNext(){
+  if(ionIdx>=ionQueue.length){ionShowEnd();return;}
+  ionLoadCard();
+}
+
+function ionShowEnd(){
+  const pct=Math.round((ionCt/ionQueue.length)*100);
+  const msg=pct===100?'Perfect score!':pct>=80?'Excellent work!':pct>=60?'Good effort!':'Keep drilling!';
+  document.getElementById('ion-card').innerHTML=`
+    <div class="end-screen">
+      <div style="color:var(--text2);font-size:14px;">Final score</div>
+      <div class="end-score-big">${ionScore}</div>
+      <div class="end-sub">${ionCt}/${ionQueue.length} correct — ${pct}%<br>${msg}</div>
+      <div class="end-btns">
+        <button class="btn" onclick="ionStart();document.getElementById('ion-card').innerHTML='';">Play again</button>
+        <button class="btn btn-ghost" onclick="showSection('reference')">Reference sheet</button>
+      </div>
+    </div>`;
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const nb=document.getElementById('ion-next');
+    if(nb&&nb.classList.contains('show')) ionNext();
+    else if(document.getElementById('ion-input')&&!document.getElementById('ion-input').disabled) ionSubmit();
+  }
+});
+
+// ============ PERIODIC TABLE ============
+let ptMode='symbol', ptQuiz=[], ptIdx=0, ptScore=0, ptCt=0, ptAnswered=false;
+
+function ptSetMode(m,btn){
+  ptMode=m;
+  document.querySelectorAll('#sec-periodic .mode-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ptStart();
+}
+
+function ptInit(){
+  if(document.getElementById('pt-grid').children.length>0) return;
+  ptBuildGrid();
+  ptStart();
+}
+
+function ptBuildGrid(){
+  const grid=document.getElementById('pt-grid');
+  grid.innerHTML='';
+  const cells={};
+  ELEMENTS.forEach(el=>{
+    cells[`${el.period}-${el.group}`]=el;
+  });
+  for(let row=1;row<=7;row++){
+    for(let col=1;col<=18;col++){
+      const el=cells[`${row}-${col}`];
+      const div=document.createElement('div');
+      if(el){
+        div.className=`pt-cell ${el.type}`;
+        div.innerHTML=`<span class="sym">${el.sym}</span><span class="num">${el.n}</span>`;
+        div.dataset.n=el.n;
+        div.title=`${el.name} (${el.n})`;
+        div.onclick=()=>ptClickElement(el.n);
+      } else {
+        div.className='pt-cell empty';
+      }
+      grid.appendChild(div);
+    }
+  }
+}
+
+function ptStart(){
+  ptQuiz=shuffle([...ELEMENTS]).slice(0,10);
+  ptIdx=0;ptScore=0;ptCt=0;ptAnswered=false;
+  ptUpdateStats();ptLoadQ();
+}
+
+function ptUpdateStats(){
+  document.getElementById('pt-score').textContent=ptScore;
+  document.getElementById('pt-ct').textContent=ptCt;
+  document.getElementById('pt-qnum').textContent=(ptIdx+1)+'/10';
+}
+
+function ptLoadQ(){
+  if(ptIdx>=ptQuiz.length){ptShowEnd();return;}
+  ptAnswered=false;
+  document.querySelectorAll('.pt-cell').forEach(c=>{
+    c.classList.remove('highlighted','correct-hl','wrong-hl');
+  });
+  document.getElementById('pt-reveal').className='reveal';
+  document.getElementById('pt-next').className='btn btn-ghost btn-full next-btn';
+  const el=ptQuiz[ptIdx];
+  let big,sub;
+  if(ptMode==='symbol'){big=el.sym;sub='Click the element with this symbol';}
+  else if(ptMode==='name'){big=el.name;sub='Click this element on the table';}
+  else{big='#'+el.n;sub='Click the element with this atomic number';}
+  document.getElementById('pt-prompt-big').textContent=big;
+  document.getElementById('pt-prompt-sub').textContent=sub;
+  ptUpdateStats();
+}
+
+function ptClickElement(n){
+  if(ptAnswered) return;
+  ptAnswered=true;
+  const correct=ptQuiz[ptIdx].n;
+  const isRight=(n===correct);
+  const clickedCell=document.querySelector(`.pt-cell[data-n="${n}"]`);
+  const correctCell=document.querySelector(`.pt-cell[data-n="${correct}"]`);
+  if(isRight){
+    clickedCell.classList.add('correct-hl');
+    ptScore+=10;ptCt++;
+    document.getElementById('pt-reveal').className='reveal show correct';
+    document.getElementById('pt-r-label').textContent='✓ Correct!';
+    document.getElementById('pt-r-ans').textContent=ptQuiz[ptIdx].name+' — '+ptQuiz[ptIdx].sym+', #'+ptQuiz[ptIdx].n;
+  } else {
+    clickedCell.classList.add('wrong-hl');
+    correctCell.classList.add('correct-hl');
+    document.getElementById('pt-reveal').className='reveal show wrong';
+    document.getElementById('pt-r-label').textContent='✗ That was '+ELEMENTS.find(e=>e.n===n)?.name+'. Correct:';
+    document.getElementById('pt-r-ans').textContent=ptQuiz[ptIdx].name+' — '+ptQuiz[ptIdx].sym+', #'+ptQuiz[ptIdx].n;
+  }
+  ptIdx++;
+  document.getElementById('pt-next').className='btn btn-ghost btn-full next-btn show';
+  document.getElementById('pt-next').textContent=ptIdx>=ptQuiz.length?'See results →':'Next →';
+}
+
+function ptNext(){
+  if(ptIdx>=ptQuiz.length){ptShowEnd();return;}
+  ptLoadQ();
+}
+
+function ptShowEnd(){
+  const pct=Math.round((ptCt/10)*100);
+  document.querySelector('#sec-periodic .card').innerHTML=`
+    <div class="end-screen">
+      <div style="color:var(--text2);font-size:14px;">Final score</div>
+      <div class="end-score-big">${ptScore}</div>
+      <div class="end-sub">${ptCt}/10 correct — ${pct}%</div>
+      <div class="end-btns"><button class="btn" onclick="ptBuildGrid();ptStart();document.querySelector('#sec-periodic .card').innerHTML='<div class=pt-quiz-prompt id=pt-prompt><div class=big id=pt-prompt-big></div><div class=sub id=pt-prompt-sub></div></div><div class=pt-grid id=pt-grid></div><div class=reveal id=pt-reveal><div class=reveal-label id=pt-r-label></div><div class=reveal-ans id=pt-r-ans></div></div><button class=btn btn-ghost btn-full next-btn id=pt-next onclick=ptNext() style=margin-top:1rem>Next →</button>';ptBuildGrid();ptStart();">Play again</button></div>
+    </div>`;
+}
+
+// ============ EQUATIONS ============
+let eqQueue=[], eqIdx=0, eqScore=0, eqCt=0;
+let eqBlanks=[], eqSelected=null;
+
+function eqStart(){
+  eqQueue=shuffle([...EQUATIONS]);
+  eqIdx=0;eqScore=0;eqCt=0;
+  eqUpdateStats();eqLoadQ();
+}
+
+function eqUpdateStats(){
+  document.getElementById('eq-score').textContent=eqScore;
+  document.getElementById('eq-ct').textContent=eqCt;
+  document.getElementById('eq-qnum').textContent=(eqIdx+1)+'/'+eqQueue.length;
+}
+
+function eqLoadQ(){
+  if(eqIdx>=eqQueue.length){eqShowEnd();return;}
+  eqSelected=null;
+  const eq=eqQueue[eqIdx];
+  document.getElementById('eq-reveal').className='reveal';
+  document.getElementById('eq-next').className='btn btn-ghost btn-full next-btn';
+
+  let blankIdx=0;
+  eqBlanks=new Array(eq.answer.length).fill(null);
+  let html='';
+  eq.parts.forEach(part=>{
+    if(part.startsWith('__')){
+      html+=`<span class="eq-blank" id="eqb-${blankIdx}" onclick="eqSelectBlank(${blankIdx})">?</span>${part.slice(2)} `;
+      blankIdx++;
+    } else {
+      html+=`<span>${part} </span>`;
+    }
+  });
+  document.getElementById('eq-display').innerHTML=html;
+
+  const numBtns=document.getElementById('eq-num-btns');
+  numBtns.innerHTML='';
+  [1,2,3,4,5,6,7,8,9].forEach(n=>{
+    const btn=document.createElement('button');
+    btn.className='eq-num-btn';
+    btn.textContent=n;
+    btn.onclick=()=>eqFillBlank(n);
+    numBtns.appendChild(btn);
+  });
+  eqUpdateStats();
+}
+
+function eqSelectBlank(idx){
+  eqSelected=idx;
+  document.querySelectorAll('.eq-blank').forEach((b,i)=>{
+    b.style.borderColor=i===idx?'var(--accent2)':'var(--accent)';
+  });
+}
+
+function eqFillBlank(n){
+  if(eqSelected===null) return;
+  eqBlanks[eqSelected]=n;
+  const span=document.getElementById('eqb-'+eqSelected);
+  span.textContent=n;
+  span.classList.add('filled');
+  span.style.borderColor='var(--border)';
+  eqSelected=null;
+}
+
+function eqCheck(){
+  const eq=eqQueue[eqIdx];
+  if(eqBlanks.some(b=>b===null)){
+    document.getElementById('eq-reveal').className='reveal show wrong';
+    document.getElementById('eq-r-label').textContent='Fill in all blanks first!';
+    document.getElementById('eq-r-ans').textContent='';
+    return;
+  }
+  const isRight=eqBlanks.every((b,i)=>b===eq.answer[i]);
+  if(isRight){
+    eqScore+=10;eqCt++;
+    document.querySelectorAll('.eq-blank').forEach(b=>b.classList.add('correct-eq'));
+    document.getElementById('eq-reveal').className='reveal show correct';
+    document.getElementById('eq-r-label').textContent='✓ Perfectly balanced!';
+    document.getElementById('eq-r-ans').textContent=eq.label;
+  } else {
+    document.querySelectorAll('.eq-blank').forEach((b,i)=>{
+      b.classList.add(eqBlanks[i]===eq.answer[i]?'correct-eq':'wrong-eq');
+    });
+    document.getElementById('eq-reveal').className='reveal show wrong';
+    document.getElementById('eq-r-label').textContent='✗ Not quite. Correct coefficients:';
+    document.getElementById('eq-r-ans').textContent=eq.answer.join(', ')+' — '+eq.label;
+  }
+  eqIdx++;
+  document.getElementById('eq-next').className='btn btn-ghost btn-full next-btn show';
+  document.getElementById('eq-next').textContent=eqIdx>=eqQueue.length?'See results →':'Next →';
+}
+
+function eqSkip(){
+  eqIdx++;
+  eqUpdateStats();
+  if(eqIdx>=eqQueue.length) eqShowEnd();
+  else eqLoadQ();
+}
+
+function eqNext(){
+  if(eqIdx>=eqQueue.length){eqShowEnd();return;}
+  eqLoadQ();
+}
+
+function eqShowEnd(){
+  const pct=Math.round((eqCt/eqQueue.length)*100);
+  document.getElementById('eq-card').innerHTML=`
+    <div class="end-screen">
+      <div style="color:var(--text2);font-size:14px;">Final score</div>
+      <div class="end-score-big">${eqScore}</div>
+      <div class="end-sub">${eqCt}/${eqQueue.length} correct — ${pct}%</div>
+      <div class="end-btns"><button class="btn" onclick="eqQueue=[];eqStart()">Play again</button></div>
+    </div>`;
+}
+
+// ============ REFERENCE ============
+function refBuild(){
+  const tbody=document.getElementById('ref-body');
+  if(tbody.children.length>0) return;
+  const chargeClass=c=>c==='1+'?'charge-pos':c==='1−'?'charge-neg1':c==='2−'?'charge-neg2':'charge-neg3';
+  tbody.innerHTML=IONS.map(ion=>`
+    <tr>
+      <td>${ion.name}</td>
+      <td class="mono">${ion.display}</td>
+      <td><span class="charge-badge ${chargeClass(ion.charge)}">${ion.charge}</span></td>
+    </tr>`).join('');
+}
+
+// init
+ionStart();
+</script>
+</body>
+</html>
